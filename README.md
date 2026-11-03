@@ -100,7 +100,7 @@ Les images de chaque classe sont mélangées avec une graine fixe (`42`), puis r
 
 ### Ordre des classes
 
-`image_dataset_from_directory` trie les noms de dossiers par ordre alphabétique, les majuscules avant les minuscules. L'ordre obtenu est **`NiCT`, `nCT`, `pCT`**. Il est enregistré explicitement dans `outputs/checkpoints/class_names.json` et réutilisé dans le notebook, l'évaluation et l'application Streamlit.
+Le tri alphabétique des noms de dossiers, majuscules avant minuscules (le comportement de `image_dataset_from_directory`), donne **`NiCT`, `nCT`, `pCT`**. Cet ordre est enregistré explicitement dans `outputs/checkpoints/class_names.json` et réutilisé dans le notebook, l'évaluation et l'application Streamlit.
 
 ## Modèle
 

@@ -7978,7 +7978,7 @@ kaggle<span class="w"> </span>datasets<span class="w"> </span>download<span clas
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Jeu-de-donn%C3%A9es">Jeu de données<a class="anchor-link" href="#Jeu-de-donn%C3%A9es">¶</a></h2><p>Les images sont rangées dans trois dossiers, un par classe : <code>nCT</code>, <code>NiCT</code> et <code>pCT</code>. Les deux cellules suivantes vérifient que les dossiers et les images attendus sont présents.</p>
-<p><strong>Ordre des classes.</strong> <code>image_dataset_from_directory</code> trie les noms de dossiers par ordre alphabétique, les majuscules avant les minuscules. L'ordre obtenu est donc <code>NiCT</code>, <code>nCT</code>, <code>pCT</code>. Cet ordre est enregistré explicitement dans <code>outputs/checkpoints/class_names.json</code> et réutilisé partout : notebook, entraînement, évaluation et application Streamlit.</p>
+<p><strong>Ordre des classes.</strong> Le tri alphabétique des noms de dossiers, majuscules avant minuscules (le comportement de <code>image_dataset_from_directory</code>), donne <code>NiCT</code>, <code>nCT</code>, <code>pCT</code>. Cet ordre est enregistré explicitement dans <code>outputs/checkpoints/class_names.json</code> et réutilisé partout : notebook, entraînement, évaluation et application Streamlit.</p>
 </div>
 </div>
 </div>
