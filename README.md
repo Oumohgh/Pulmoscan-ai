@@ -416,7 +416,7 @@ Ce que je **n'ai pas** fait :
 
 PulmoScan AI est une adaptation française et une remise en forme du projet open-source **[`covid-ct-classifier`]([URL_DU_REPO_ORIGINAL])**, créé par son auteur original (`chrispathway`). Le code, l'architecture, les poids entraînés et les résultats d'origine lui appartiennent. Cette adaptation ne revendique ni la paternité du modèle ni celle des métriques héritées.
 
-Le fichier [`LICENSE`](LICENSE) (MIT) est conservé dans ce dépôt. Les droits de paternité du code et des poids d'origine restent attribués à leur auteur.
+Le fichier [`LICENSE`](LICENSE) (MIT) couvre la présente adaptation. Le projet d'origine ne fournit pas de fichier de licence explicite : les droits sur son code, son architecture et ses poids restent ceux de leur auteur, et toute réutilisation doit vérifier ses conditions.
 
 ### Jeu de données
 
