@@ -400,6 +400,8 @@ Cette section liste uniquement ce qui a été réellement modifié ou ajouté da
 - **Démo Streamlit** : `app.py`, `requirements-demo.txt`, `Dockerfile` et `.dockerignore` pour tester le modèle depuis un navigateur.
 - **Attribution et licence** : conservation du fichier `LICENSE`, crédits explicites pour le projet d'origine, le jeu de données et MobileNetV3.
 
+Les sorties déjà enregistrées dans `classifier.ipynb` proviennent du run d'origine ; quelques figures historiques y conservent donc leurs libellés anglais. Le code, lui, génère des libellés français.
+
 Ce que je **n'ai pas** fait :
 
 - je n'ai pas réentraîné le modèle ;
