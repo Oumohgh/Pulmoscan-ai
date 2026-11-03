@@ -1,6 +1,5 @@
-PulmoScan AI
+#### PulmoScan AI
 
-Show Image Show Image Show Image Show Image
 <img width="1100" height="902" alt="ct-examples" src="https://github.com/user-attachments/assets/e88c776b-71c8-4f00-9e49-65c6ccd2c9b9" />
 
 Classification de coupes de scanner thoracique par deep learning
