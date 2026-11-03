@@ -1,0 +1,12 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.py[cod]
+.ipynb_checkpoints
+*.ipynb
+*.html
+CT Scans
+outputs/metrics.json
+assets/confusion-matrix.png
