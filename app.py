@@ -160,7 +160,7 @@ def main() -> None:
         )
         if uploaded is not None:
             image = Image.open(uploaded)
-            st.image(image, caption="Coupe chargée", use_container_width=True)
+            st.image(image, caption="Coupe chargée", width="stretch")
 
     with right:
         if uploaded is None:
@@ -197,7 +197,7 @@ def main() -> None:
                 for row in rows
             ]),
             hide_index=True,
-            use_container_width=True,
+            width="stretch",
         )
 
     st.divider()
