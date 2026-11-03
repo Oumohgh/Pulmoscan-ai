@@ -1,27 +1,4 @@
-<p align="center">
-  <img src="assets/banner.png" alt="PulmoScan AI — classification de coupes de scanner thoracique" width="100%">
-</p>
 
-<h1 align="center">PulmoScan AI</h1>
-
-<p align="center">
-  <strong>Classification de coupes de scanner thoracique avec TensorFlow/Keras et MobileNetV3-Large</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11">
-  <img src="https://img.shields.io/badge/TensorFlow-2.21-FF6F00?logo=tensorflow&logoColor=white" alt="TensorFlow 2.21">
-  <img src="https://img.shields.io/badge/Keras-3.15-D00000?logo=keras&logoColor=white" alt="Keras 3.15">
-  <img src="https://img.shields.io/badge/Architecture-MobileNetV3--Large-0E7C86" alt="MobileNetV3-Large">
-  <img src="https://img.shields.io/badge/Licence-MIT-22B8CF" alt="Licence MIT">
-  <img src="https://img.shields.io/badge/Statut-Pédagogique-F59F00" alt="Projet pédagogique">
-</p>
-
-<p align="center">
-  <strong>Mohammed Oughlane</strong> · Marrakech, Maroc · novembre 2026
-</p>
-
----
 
 ## Résumé
 
@@ -31,17 +8,33 @@ Projet pédagogique : il ne constitue pas un dispositif médical et ne doit pas 
 
 ## Table des matières
 
+- [Résumé](#résumé)
+- [Table des matières](#table-des-matières)
 - [Présentation](#présentation)
+  - [Aperçu](#aperçu)
 - [Données](#données)
+  - [Répartition des données](#répartition-des-données)
+  - [Prétraitement](#prétraitement)
+  - [Ordre des classes](#ordre-des-classes)
 - [Modèle](#modèle)
 - [Entraînement](#entraînement)
 - [Résultats](#résultats)
+  - [Comparaison avec le projet d'origine](#comparaison-avec-le-projet-dorigine)
 - [Installation](#installation)
+  - [Prérequis](#prérequis)
+  - [1. Cloner le dépôt](#1-cloner-le-dépôt)
+  - [2. Créer l'environnement et installer les dépendances](#2-créer-lenvironnement-et-installer-les-dépendances)
+  - [3. Télécharger le jeu de données](#3-télécharger-le-jeu-de-données)
 - [Utilisation](#utilisation)
+  - [Lancer le notebook](#lancer-le-notebook)
+  - [Utiliser le modèle entraîné](#utiliser-le-modèle-entraîné)
+  - [Lancer la démo Streamlit (optionnel)](#lancer-la-démo-streamlit-optionnel)
+  - [Docker (optionnel)](#docker-optionnel)
 - [Structure du dépôt](#structure-du-dépôt)
 - [Analyse critique](#analyse-critique)
-- [Ma contribution](#ma-contribution)
-- [Crédits et attribution](#crédits-et-attribution)
+  - [Améliorations possibles](#améliorations-possibles)
+  - [Jeu de données](#jeu-de-données)
+  - [Architecture et outils](#architecture-et-outils)
 - [À propos de l'auteur](#à-propos-de-lauteur)
 - [Avertissement](#avertissement)
 
@@ -391,27 +384,6 @@ Les performances du projet d'origine sont élevées, mais elles ne suffisent pas
 - Mesurer la calibration et fournir des intervalles de confiance.
 - Publier les métriques détaillées par classe après un entraînement complet.
 
-## Ma contribution
-
-Cette version vise à rendre le projet plus accessible, documenté et exploitable en français. Les changements réellement apportés comprennent :
-
-- **Migration PyTorch vers TensorFlow/Keras** : notebook, pipeline `tf.data`, modèle MobileNetV3-Large, entraînement, sauvegarde et rechargement.
-- **Nouvelle évaluation** : ajout de la matrice de confusion et du rapport précision/rappel/F1 par classe avec scikit-learn. Le code est prêt ; les résultats restent à produire après un entraînement complet.
-- **Application Streamlit** : chargement du modèle `.keras` et de `class_names.json`, prétraitement 224 × 224 en pixels bruts, prédiction softmax.
-- **Documentation française** : README, notebook, commentaires, messages et libellés de figures.
-- **Rebranding** sous le nom **PulmoScan AI** et création des visuels français.
-- **Mode smoke test** et variable `PULMOSCAN_DATA_ROOT` pour vérifier le pipeline sans le vrai jeu de données.
-- **Docker** : mise à jour du conteneur pour TensorFlow/Keras.
-- **Clarification des crédits, de l'attribution et de la provenance des résultats**
-
-Aucun entraînement complet sur le vrai jeu de données n'a été réalisé. Aucune métrique TensorFlow n'est présentée comme mesurée.
-
-## Crédits et attribution
-
-Ce projet est dérivé du projet open source d'origine :
-
-- **Projet d'origine :** `covid-ct-classifier`, auteur **chrispathway**, [URL_DU_REPO_ORIGINAL].
-- Le fichier [`LICENSE`](LICENSE) de ce dépôt est conservé.
 
 ### Jeu de données
 
@@ -431,10 +403,6 @@ Les ressources et bibliothèques tierces utilisées sont référencées ci-dessu
 **Mohammed Oughlane**  
 Marrakech, Maroc
 
-- GitHub : [LIEN_GITHUB]
-- LinkedIn : [LIEN_LINKEDIN]
-
-**Période de réalisation :** 30/10/2026 – 03/11/2026
 
 ---
 
