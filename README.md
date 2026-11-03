@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <strong>Mohammed Oughlane</strong> · Marrakech, Maroc · Novembre 2026
+  <strong>Mohammed Oughlane</strong> · Marrakech, Maroc · novembre 2026
 </p>
 
 ---
@@ -100,7 +100,7 @@ Les images de chaque classe sont mélangées avec une graine fixe (`42`), puis r
 
 ### Ordre des classes
 
-Le tri alphabétique des noms de dossiers, majuscules avant minuscules (le comportement de `image_dataset_from_directory`), donne **`NiCT`, `nCT`, `pCT`**. Cet ordre est enregistré explicitement dans `outputs/checkpoints/class_names.json` et réutilisé dans le notebook, l'évaluation et l'application Streamlit.
+Le tri alphabétique des noms de dossiers, majuscules avant minuscules, conformément au comportement de `image_dataset_from_directory`, donne **`NiCT`, `nCT`, `pCT`**. Cet ordre est enregistré explicitement dans `outputs/checkpoints/class_names.json` et réutilisé dans le notebook, l'évaluation et l'application Streamlit.
 
 ## Modèle
 
@@ -149,13 +149,13 @@ Le modèle est enregistré dans `outputs/checkpoints/pulmoscan_mobilenetv3.keras
 
 **Mode smoke test.** `SMOKE_TEST = True` limite l'entraînement à une époque et à un petit sous-ensemble des données. Il sert uniquement à vérifier que le pipeline fonctionne. Pour l'entraînement complet, passez à `False`.
 
-**Vérification effectuée :** le notebook a été exécuté de bout en bout en mode smoke test sur un jeu de données synthétique, sur Windows avec TensorFlow 2.21.0 en CPU. Aucun entraînement complet sur le vrai jeu de données n'a été réalisé.
+**Vérification effectuée :** le notebook a été exécuté de bout en bout en mode smoke test sur un jeu de données synthétique, sous Windows avec TensorFlow 2.21.0 en CPU. Aucun entraînement complet sur le vrai jeu de données n'a été réalisé.
 
 ## Résultats
 
-> **Aucun entraînement complet TensorFlow/Keras sur le vrai jeu de données n'a été exécuté.** Le tableau ci-dessous est volontairement laissé incomplet. Il ne doit être rempli qu'avec les valeurs produites par votre propre run.
+> **Aucun entraînement complet TensorFlow/Keras sur le vrai jeu de données n'a été exécuté.** Le tableau ci-dessous est volontairement laissé incomplet. Il ne doit être rempli qu'avec les valeurs produites par votre propre exécution.
 
-| Ensemble | Images | Accuracy | Loss |
+| Ensemble | Images | Exactitude | Perte |
 |---|---:|---:|---:|
 | Entraînement | 13 778 | à compléter après l'entraînement complet | à compléter après l'entraînement complet |
 | Validation | 2 951 | à compléter après l'entraînement complet | à compléter après l'entraînement complet |
@@ -177,11 +177,11 @@ Les métriques par classe (précision, rappel, F1, support) sont calculées avec
 | Exactitude test | **99,76 %** — résultat du projet d'origine | à compléter après l'entraînement complet |
 | F1 par classe | non fourni dans le projet d'origine | à compléter après l'entraînement complet |
 | Durée d'entraînement | **41 min 07 s** (25 époques) — résultat du projet d'origine | à mesurer |
-| Matériel | MacBook Pro M5 Pro, 48 Go, MPS — projet d'origine | à renseigner selon le run |
+| Matériel | MacBook Pro M5 Pro, 48 Go, MPS — projet d'origine | à renseigner selon l'exécution |
 
 Les valeurs PyTorch sont reprises telles quelles du README du projet d'origine et clairement identifiées comme telles. **Ce ne sont pas les résultats de cette migration.** Aucune métrique, durée ou configuration matérielle TensorFlow n'est inventée : la colonne de droite reste vide tant qu'un entraînement complet n'a pas été exécuté.
 
-![Courbes du run d'origine](assets/training-curves-fr.png)
+![Courbes de l'exécution d'origine](assets/training-curves-fr.png)
 
 *Figure du projet d'origine (PyTorch), conservée pour comparaison. Elle ne constitue pas un résultat TensorFlow.*
 
@@ -205,7 +205,7 @@ Remplacez `[URL_DE_MON_REPO]` par l'URL de votre dépôt GitHub :
 
 ```bash
 git clone [URL_DE_MON_REPO]
-cd pulmoscan-ai
+cd Pulmoscan-ai
 ```
 
 ### 2. Créer l'environnement et installer les dépendances
@@ -256,7 +256,7 @@ kaggle datasets download `
 Copiez les dossiers des **coupes originales** dans le répertoire du projet :
 
 ```text
-pulmoscan-ai/
+Pulmoscan-ai/
 └── CT Scans/
     ├── nCT/
     ├── NiCT/
@@ -332,7 +332,7 @@ Puis ouvrez `http://localhost:8501` dans votre navigateur.
 ## Structure du dépôt
 
 ```text
-pulmoscan-ai/
+Pulmoscan-ai/
 ├── app.py
 ├── assets/
 │   ├── banner.png
@@ -393,7 +393,7 @@ Les performances du projet d'origine sont élevées, mais elles ne suffisent pas
 
 ## Ma contribution
 
-Ce projet vise à rendre le projet plus accessible, documenté et exploitable en français. Les changements réellement apportés comprennent :
+Cette version vise à rendre le projet plus accessible, documenté et exploitable en français. Les changements réellement apportés comprennent :
 
 - **Migration PyTorch vers TensorFlow/Keras** : notebook, pipeline `tf.data`, modèle MobileNetV3-Large, entraînement, sauvegarde et rechargement.
 - **Nouvelle évaluation** : ajout de la matrice de confusion et du rapport précision/rappel/F1 par classe avec scikit-learn. Le code est prêt ; les résultats restent à produire après un entraînement complet.
@@ -402,7 +402,7 @@ Ce projet vise à rendre le projet plus accessible, documenté et exploitable en
 - **Rebranding** sous le nom **PulmoScan AI** et création des visuels français.
 - **Mode smoke test** et variable `PULMOSCAN_DATA_ROOT` pour vérifier le pipeline sans le vrai jeu de données.
 - **Docker** : mise à jour du conteneur pour TensorFlow/Keras.
-- **Clarification des crédits, de l'attribution et de la provenance des résultats.**
+- **Clarification des crédits, de l'attribution et de la provenance des résultats**
 
 Aucun entraînement complet sur le vrai jeu de données n'a été réalisé. Aucune métrique TensorFlow n'est présentée comme mesurée.
 
