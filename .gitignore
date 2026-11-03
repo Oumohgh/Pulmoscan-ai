@@ -27,3 +27,6 @@ outputs/checkpoints/*
 *.pt
 *.pth
 !outputs/checkpoints/mobilenet_v3_large.pth
+
+# Generated evaluation artefacts
+assets/confusion-matrix.png
