@@ -20,13 +20,16 @@ data/
 CT\ Scans/
 CT\ Scans\ for\ COVID-19/
 
-# Training outputs and model weights, except the final trained model
+# Training outputs and model weights
 outputs/*
 !outputs/checkpoints/
 outputs/checkpoints/*
-*.pt
-*.pth
-!outputs/checkpoints/mobilenet_v3_large.pth
+!outputs/checkpoints/class_names.json
+!outputs/checkpoints/pulmoscan_mobilenetv3.keras
+*.keras
+!outputs/checkpoints/pulmoscan_mobilenetv3.keras
 
 # Generated evaluation artefacts
-assets/confusion-matrix.png
+assets/courbes_validation.png
+assets/matrice_confusion.png
+assets/predictions.png

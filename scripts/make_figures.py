@@ -75,7 +75,7 @@ def make_banner() -> None:
             color="white", va="center", zorder=2)
     ax.text(0.057, 0.36, "Classification de coupes de scanner thoracique par deep learning",
             fontsize=21, color="#D8F3F9", va="center", zorder=2)
-    ax.text(0.057, 0.16, "PyTorch  ·  MobileNetV3-Large  ·  Transfer learning",
+    ax.text(0.057, 0.16, "TensorFlow / Keras  ·  MobileNetV3-Large  ·  Transfer learning",
             fontsize=14, color="#9FDDE6", va="center", zorder=2)
     ax.text(0.945, 0.16, "30/10/2026 – 03/11/2026",
             fontsize=13, color="#9FDDE6", va="center", ha="right", zorder=2)
@@ -123,7 +123,7 @@ def make_training_curves() -> None:
     ax1.plot(epochs, losses, color=CORAL, lw=2.2, marker="o", ms=3.5)
     ax1.set_title("Perte de validation", fontsize=14)
     ax1.set_xlabel("Époque")
-    ax1.set_ylabel("Perte (NLLLoss)")
+    ax1.set_ylabel("Perte (entropie croisée)")
     ax1.grid(color="#E3EAF1", lw=1)
     ax1.set_axisbelow(True)
     ax1.annotate(f"{losses[-1]:.4f}", (epochs[-1], losses[-1]),
@@ -170,7 +170,7 @@ def make_results() -> None:
 
     bars2 = ax2.bar(splits, loss, color=colors, width=0.55)
     ax2.set_title("Perte par découpage", fontsize=14)
-    ax2.set_ylabel("Perte (NLLLoss)")
+    ax2.set_ylabel("Perte (entropie croisée)")
     for bar, value in zip(bars2, loss):
         ax2.text(bar.get_x() + bar.get_width() / 2, value + 0.001,
                  f"{value:.4f}", ha="center", fontsize=11, color=NAVY)
@@ -200,9 +200,9 @@ def make_architecture() -> None:
         (0.03, 0.36, 0.14, 0.28, "Entrée\n224 × 224 × 3", LIGHT, NAVY),
         (0.21, 0.30, 0.20, 0.40, "MobileNetV3-Large\npré-entraîné ImageNet", TEAL, "white"),
         (0.45, 0.36, 0.13, 0.28, "960\ncaractéristiques", LIGHT, NAVY),
-        (0.62, 0.36, 0.13, 0.28, "Linear 1280\n+ ReLU\n+ Dropout 0.2", LIGHT, NAVY),
-        (0.79, 0.36, 0.10, 0.28, "Linear 3\n+ LogSoftmax", LIGHT, NAVY),
-        (0.91, 0.36, 0.07, 0.28, "NLLLoss", CORAL, "white"),
+        (0.62, 0.36, 0.13, 0.28, "Dense 1280\n+ ReLU\n+ Dropout 0.2", LIGHT, NAVY),
+        (0.79, 0.36, 0.10, 0.28, "Dense 3\n+ Softmax", LIGHT, NAVY),
+        (0.91, 0.36, 0.07, 0.28, "Entropie\ncroisée", CORAL, "white"),
     ]
 
     for x, y, w, h, label, face, text_color in boxes:
@@ -223,7 +223,7 @@ def make_architecture() -> None:
     ax.text(0.5, 0.90, "Architecture du classifieur PulmoScan AI", ha="center",
             fontsize=18, color=NAVY, fontweight="bold")
     ax.text(0.5, 0.08,
-            "Transfer learning : 4 205 875 paramètres entraînables, réseau entier affiné.",
+            "Transfer learning : réseau entier affiné, sortie softmax à trois classes.",
             ha="center", fontsize=11, color=GREY)
 
     save(fig, "model-architecture-fr.png")

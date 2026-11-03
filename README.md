@@ -1,239 +1,216 @@
-```{=html}
 <p align="center">
-```
-`<img src="assets/banner.png" alt="PulmoScan AI — classification de coupes de scanner thoracique" width="100%">`{=html}
-```{=html}
+  <img src="assets/banner.png" alt="PulmoScan AI — classification de coupes de scanner thoracique" width="100%">
 </p>
-```
-```{=html}
-<h1 align="center">
-```
-PulmoScan AI
-```{=html}
-</h1>
-```
-```{=html}
-<p align="center">
-```
-`<strong>`{=html}Classification de coupes de scanner thoracique avec
-PyTorch et MobileNetV3-Large`</strong>`{=html}
-```{=html}
-</p>
-```
-```{=html}
-<p align="center">
-```
-`<img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11">`{=html}
-`<img src="https://img.shields.io/badge/PyTorch-2.14-EE4C2C?logo=pytorch&logoColor=white" alt="PyTorch 2.14">`{=html}
-`<img src="https://img.shields.io/badge/Architecture-MobileNetV3--Large-0E7C86" alt="MobileNetV3-Large">`{=html}
-`<img src="https://img.shields.io/badge/Licence-MIT-22B8CF" alt="Licence MIT">`{=html}
-`<img src="https://img.shields.io/badge/Statut-Pédagogique-F59F00" alt="Projet pédagogique">`{=html}
-```{=html}
-</p>
-```
-```{=html}
-<p align="center">
-```
-`<strong>`{=html}Mohammed Oughlane`</strong>`{=html} · Marrakech, Maroc
-· Novembre 2026
-```{=html}
-</p>
-```
 
-------------------------------------------------------------------------
+<h1 align="center">PulmoScan AI</h1>
+
+<p align="center">
+  <strong>Classification de coupes de scanner thoracique avec TensorFlow/Keras et MobileNetV3-Large</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white" alt="Python 3.11">
+  <img src="https://img.shields.io/badge/TensorFlow-2.21-FF6F00?logo=tensorflow&logoColor=white" alt="TensorFlow 2.21">
+  <img src="https://img.shields.io/badge/Keras-3.15-D00000?logo=keras&logoColor=white" alt="Keras 3.15">
+  <img src="https://img.shields.io/badge/Architecture-MobileNetV3--Large-0E7C86" alt="MobileNetV3-Large">
+  <img src="https://img.shields.io/badge/Licence-MIT-22B8CF" alt="Licence MIT">
+  <img src="https://img.shields.io/badge/Statut-Pédagogique-F59F00" alt="Projet pédagogique">
+</p>
+
+<p align="center">
+  <strong>Mohammed Oughlane</strong> · Marrakech, Maroc · Novembre 2026
+</p>
+
+---
+
+## Résumé
+
+PulmoScan AI classe une coupe axiale de scanner thoracique en **normal**, **COVID-19** ou **non informatif**.
+Le modèle adapte **MobileNetV3-Large**, pré-entraîné sur ImageNet, par transfer learning avec **TensorFlow/Keras**.
+Projet pédagogique : il ne constitue pas un dispositif médical et ne doit pas guider une décision de santé.
+
+## Table des matières
+
+- [Présentation](#présentation)
+- [Données](#données)
+- [Modèle](#modèle)
+- [Entraînement](#entraînement)
+- [Résultats](#résultats)
+- [Installation](#installation)
+- [Utilisation](#utilisation)
+- [Structure du dépôt](#structure-du-dépôt)
+- [Analyse critique](#analyse-critique)
+- [Ma contribution](#ma-contribution)
+- [Crédits et attribution](#crédits-et-attribution)
+- [À propos de l'auteur](#à-propos-de-lauteur)
+- [Avertissement](#avertissement)
 
 ## Présentation
 
-**PulmoScan AI** est un projet de vision par ordinateur qui classe une
-image de coupe axiale de scanner thoracique dans l'une des trois
-catégories suivantes :
+**PulmoScan AI** est un projet de vision par ordinateur qui classe une image de coupe axiale de scanner thoracique dans l'une des trois catégories suivantes :
 
--   **Normal (`nCT`)** : les poumons sont visibles, sans signe associé à
-    la COVID-19 dans le jeu de données.
--   **Positif (`pCT`)** : la coupe présente des anomalies associées à
-    une pneumonie à COVID-19.
--   **Non informatif (`NiCT`)** : la coupe ne montre pas suffisamment
-    les poumons pour permettre une classification pertinente.
+- **Normal (`nCT`)** : les poumons sont visibles, sans signe associé à la COVID-19 dans le jeu de données.
+- **Positif (`pCT`)** : la coupe présente des anomalies associées à une pneumonie à COVID-19.
+- **Non informatif (`NiCT`)** : la coupe ne montre pas suffisamment les poumons pour permettre une classification pertinente.
 
-Le modèle utilise **MobileNetV3-Large**, pré-entraîné sur ImageNet, puis
-adapté à cette tâche par *transfer learning* avec **PyTorch**.
+Le modèle utilise **MobileNetV3-Large**, pré-entraîné sur ImageNet, puis adapté à cette tâche par *transfer learning* avec **TensorFlow/Keras**.
 
-> **À retenir :** PulmoScan AI est un projet développé indépendamment. Le modèle s'appuie sur MobileNetV3-Large pré-entraîné sur ImageNet, puis adapté à une tâche de classification en trois classes avec PyTorch.
+> **À retenir :** PulmoScan AI est un projet développé indépendamment. Il est dérivé du projet open source d'origine et s'appuie sur MobileNetV3-Large pré-entraîné sur ImageNet, adapté à une classification en trois classes.
 
-## Aperçu
+### Aperçu
 
 ![Exemples de coupes de scanner par classe](assets/ct-examples.png)
 
 *Exemples de coupes issus du jeu de données utilisé dans le projet.*
 
-### Architecture du modèle
+## Données
 
-![Architecture du classifieur PulmoScan
-AI](assets/model-architecture-fr.png)
-
-Le backbone MobileNetV3-Large extrait **960 caractéristiques** de chaque
-image. Sa tête de classification d'origine est remplacée par une tête
-adaptée aux trois classes :
-
-``` text
-Image 224 × 224
-      ↓
-MobileNetV3-Large
-      ↓
-960 caractéristiques
-      ↓
-Linear(960, 1280) → ReLU → Dropout(0.2)
-      ↓
-Linear(1280, 3) → LogSoftmax
-      ↓
-nCT / NiCT / pCT
-```
-
-  -----------------------------------------------------------------------
-  Élément                             Configuration
-  ----------------------------------- -----------------------------------
-  Backbone                            MobileNetV3-Large pré-entraîné sur
-                                      ImageNet
-
-  Taille d'entrée                     224 × 224 × 3
-
-  Nombre de caractéristiques          960
-
-  Tête de classification              Linear(960, 1280) → ReLU →
-                                      Dropout(0.2) → Linear(1280, 3)
-
-  Fonction de sortie                  LogSoftmax
-
-  Fonction de perte                   `NLLLoss`
-
-  Stratégie                           Fine-tuning du réseau entier
-  -----------------------------------------------------------------------
-
-`NLLLoss` associée à `LogSoftmax` est équivalente à une entropie croisée
-classique.
-
-## Jeu de données
-
-Les données proviennent du jeu Kaggle [CT Scans for COVID-19
-Classification](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19),
-publié par Abu Zahid Bin Aziz sous licence **CC BY 4.0**. Les images
-originales sont issues de la ressource
-[iCTCF](http://ictcf.biocuckoo.cn/) (Ning et al., 2020).
+Les données proviennent du jeu Kaggle [CT Scans for COVID-19 Classification](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19), publié par **Abu Zahid Bin Aziz** sous licence **CC BY 4.0**. Les images originales sont issues de la ressource [iCTCF](http://ictcf.biocuckoo.cn/) (Ning et al., 2020).
 
 Le jeu contient **19 685 coupes** :
 
-  Classe      Description                       Nombre d'images
-  ----------- ------------------------------- -----------------
-  `nCT`       Scanner normal                              9 979
-  `pCT`       Scanner positif à la COVID-19               4 001
-  `NiCT`      Scanner non informatif                      5 705
-  **Total**                                          **19 685**
+| Classe | Description | Nombre d'images |
+|---|---|---:|
+| `nCT` | Scanner normal | 9 979 |
+| `pCT` | Scanner positif à la COVID-19 | 4 001 |
+| `NiCT` | Scanner non informatif | 5 705 |
+| **Total** | | **19 685** |
 
 ![Répartition des classes](assets/class-distribution-fr.png)
 
 ### Répartition des données
 
-Les images de chaque classe sont mélangées avec une graine fixe (`42`),
-puis réparties en ensembles d'entraînement, de validation et de test.
+Les images de chaque classe sont mélangées avec une graine fixe (`42`), puis réparties en ensembles d'entraînement, de validation et de test. Les effectifs sont fixés dans le notebook, ce qui rend le découpage identique à chaque exécution.
 
-  Classe        Entraînement   Validation        Test
-  ----------- -------------- ------------ -----------
-  `nCT`                6 985        1 496       1 498
-  `NiCT`               3 993          855         857
-  `pCT`                2 800          600         601
-  **Total**       **13 778**    **2 951**   **2 956**
+| Classe | Entraînement | Validation | Test |
+|---|---:|---:|---:|
+| `nCT` | 6 985 | 1 496 | 1 498 |
+| `NiCT` | 3 993 | 855 | 857 |
+| `pCT` | 2 800 | 600 | 601 |
+| **Total** | **13 778** | **2 951** | **2 956** |
 
-**Limite importante :** le découpage est effectué par coupe et non par
-patient. Des images d'un même patient peuvent donc se retrouver dans
-plusieurs ensembles. Ce risque de fuite de données est détaillé dans la
-section [Limites](#limites-et-pistes-damélioration).
+**Limite importante :** le découpage est effectué par coupe et non par patient. Des images d'un même patient peuvent donc se retrouver dans plusieurs ensembles. Ce risque de fuite de données est détaillé dans la section [Analyse critique](#analyse-critique).
 
 ### Prétraitement
 
--   Redimensionnement à 256 px.
--   Recadrage central en 224 × 224 pour la validation et le test.
--   Recadrage aléatoire et retournement horizontal pendant
-    l'entraînement.
--   Normalisation avec les moyennes et écarts-types d'ImageNet.
+- Redimensionnement à 256 px.
+- Recadrage central en 224 × 224 pour la validation et le test.
+- Recadrage aléatoire, retournement horizontal et zoom aléatoire pendant l'entraînement, avec des couches de prétraitement Keras.
+- **Aucune normalisation ImageNet et aucune division par 255** : le MobileNetV3 de Keras intègre sa propre normalisation et attend des pixels bruts entre 0 et 255.
+
+### Ordre des classes
+
+`image_dataset_from_directory` trie les noms de dossiers par ordre alphabétique, les majuscules avant les minuscules. L'ordre obtenu est **`NiCT`, `nCT`, `pCT`**. Il est enregistré explicitement dans `outputs/checkpoints/class_names.json` et réutilisé dans le notebook, l'évaluation et l'application Streamlit.
+
+## Modèle
+
+![Architecture du classifieur PulmoScan AI](assets/model-architecture-fr.png)
+
+Le backbone MobileNetV3-Large extrait **960 caractéristiques** de chaque image. Sa tête de classification d'origine est remplacée par une tête adaptée aux trois classes :
+
+```text
+Image 224 × 224 × 3 (pixels bruts 0-255)
+      ↓
+MobileNetV3-Large (normalisation interne Keras)
+      ↓
+960 caractéristiques
+      ↓
+Dense(1280) → ReLU → Dropout(0.2)
+      ↓
+Dense(3) → Softmax
+      ↓
+NiCT / nCT / pCT
+```
+
+| Élément | Configuration |
+|---|---|
+| Backbone | MobileNetV3-Large pré-entraîné sur ImageNet |
+| Taille d'entrée | 224 × 224 × 3 |
+| Nombre de caractéristiques | 960 |
+| Tête de classification | `Dense(1280)` → ReLU → `Dropout(0.2)` → `Dense(3, softmax)` |
+| Fonction de sortie | Softmax |
+| Fonction de perte | `SparseCategoricalCrossentropy` |
+| Stratégie | Fine-tuning du réseau entier (`base_model.trainable = True`) |
 
 ## Entraînement
 
-Les paramètres ci-dessous présentent la configuration utilisée pour l'entraînement du modèle.
+| Paramètre | Valeur |
+|---|---|
+| Optimiseur | AdamW |
+| Learning rate | `1e-4` |
+| Weight decay | `1e-4` |
+| Batch size | `16` |
+| Nombre d'époques | `25` |
+| Perte | Entropie croisée catégorielle parcimonieuse |
+| Précision | float32 |
+| Callbacks | `ModelCheckpoint` (meilleure exactitude de validation), `EarlyStopping` (patience 5, restauration des meilleurs poids) |
 
-  -----------------------------------------------------------------------
-  Paramètre                           Valeur
-  ----------------------------------- -----------------------------------
-  Optimiseur                          AdamW
+Le modèle est enregistré dans `outputs/checkpoints/pulmoscan_mobilenetv3.keras`. En mode smoke test, le fichier porte le suffixe `_smoke` pour ne jamais écraser un vrai modèle.
 
-  Learning rate                       `1e-4`
+**Mode smoke test.** `SMOKE_TEST = True` limite l'entraînement à une époque et à un petit sous-ensemble des données. Il sert uniquement à vérifier que le pipeline fonctionne. Pour l'entraînement complet, passez à `False`.
 
-  Weight decay                        `1e-4`
-
-  Batch size                          `16`
-
-  Nombre d'époques                    `25`
-
-  Précision                           float32
-
-  Environnement du run documenté      MacBook Pro M5 Pro, 48 Go, PyTorch
-                                      MPS
-
-  Durée documentée                    41 min 07 s
-  -----------------------------------------------------------------------
-
-La configuration documentée utilise la précision float32. La précision mixte peut être évaluée selon le matériel disponible.
+**Vérification effectuée :** le notebook a été exécuté de bout en bout en mode smoke test sur un jeu de données synthétique, sur Windows avec TensorFlow 2.21.0 en CPU. Aucun entraînement complet sur le vrai jeu de données n'a été réalisé.
 
 ## Résultats
 
-> **Résultats :** les métriques ci-dessous présentent les performances rapportées pour le modèle sur les ensembles d'entraînement, de validation et de test.
+> **Aucun entraînement complet TensorFlow/Keras sur le vrai jeu de données n'a été exécuté.** Le tableau ci-dessous est volontairement laissé incomplet. Il ne doit être rempli qu'avec les valeurs produites par votre propre run.
 
-  Ensemble            Images      Accuracy         Loss
-  -------------- ----------- ------------- ------------
-  Entraînement        13 778       98,70 %       0,0316
-  Validation           2 951       99,25 %       0,0216
-  **Test**         **2 956**   **99,76 %**   **0,0070**
+| Ensemble | Images | Accuracy | Loss |
+|---|---:|---:|---:|
+| Entraînement | 13 778 | à compléter après l'entraînement complet | à compléter après l'entraînement complet |
+| Validation | 2 951 | à compléter après l'entraînement complet | à compléter après l'entraînement complet |
+| **Test** | **2 956** | **à compléter après l'entraînement complet** | **à compléter après l'entraînement complet** |
 
-![Courbes d'entraînement et de
-validation](assets/training-curves-fr.png)
+Après un entraînement complet, le notebook produit :
 
-![Résultats du projet](assets/results-fr.png)
+- `assets/courbes_validation.png` : courbes de perte et d'exactitude ;
+- `assets/matrice_confusion.png` : matrice de confusion sur le jeu de test ;
+- `assets/predictions.png` : une prédiction par classe ;
+- `outputs/metrics.json` : exactitude, perte, matrice de confusion et métriques par classe.
 
-*Les figures présentent les courbes et résultats d'entraînement du projet.*
+Les métriques par classe (précision, rappel, F1, support) sont calculées avec `classification_report` de scikit-learn.
 
-Le notebook contient également une cellule permettant de calculer les
-métriques par classe sur le jeu de test :
+### Comparaison avec le projet d'origine
 
--   matrice de confusion ;
--   précision (*precision*) ;
--   rappel (*recall*) ;
--   score F1 ;
--   support et exactitude globale.
+| Élément | PyTorch (projet d'origine) | TensorFlow/Keras (ma version) |
+|---|---|---|
+| Exactitude test | **99,76 %** — résultat du projet d'origine | à compléter après l'entraînement complet |
+| F1 par classe | non fourni dans le projet d'origine | à compléter après l'entraînement complet |
+| Durée d'entraînement | **41 min 07 s** (25 époques) — résultat du projet d'origine | à mesurer |
+| Matériel | MacBook Pro M5 Pro, 48 Go, MPS — projet d'origine | à renseigner selon le run |
 
-Le notebook permet également de générer ces métriques détaillées après l'exécution de la cellule d'évaluation.
+Les valeurs PyTorch sont reprises telles quelles du README du projet d'origine et clairement identifiées comme telles. **Ce ne sont pas les résultats de cette migration.** Aucune métrique, durée ou configuration matérielle TensorFlow n'est inventée : la colonne de droite reste vide tant qu'un entraînement complet n'a pas été exécuté.
 
-## Installation et exécution
+![Courbes du run d'origine](assets/training-curves-fr.png)
+
+*Figure du projet d'origine (PyTorch), conservée pour comparaison. Elle ne constitue pas un résultat TensorFlow.*
+
+![Résultats du projet d'origine](assets/results-fr.png)
+
+*Métriques héritées du projet d'origine. Elles n'ont pas été recalculées pour cette version TensorFlow/Keras.*
+
+## Installation
 
 ### Prérequis
 
--   Python 3.11
--   Git
--   Environ 4 Go d'espace disque pour les données
--   Un compte Kaggle pour télécharger le jeu de données
--   GPU Apple Silicon (MPS) ou NVIDIA (CUDA) recommandé pour
-    l'entraînement ; le CPU reste possible, mais plus lent.
+- Python 3.11
+- Git
+- Environ 4 Go d'espace disque pour les données
+- Un compte Kaggle pour télécharger le jeu de données
+- GPU Apple Silicon (Metal) ou NVIDIA (CUDA) recommandé pour l'entraînement ; le CPU reste possible, mais plus lent.
 
 ### 1. Cloner le dépôt
 
-Remplacez `<URL_DU_DEPOT>` par l'URL de votre dépôt GitHub :
+Remplacez `[URL_DE_MON_REPO]` par l'URL de votre dépôt GitHub :
 
-``` bash
-git clone <URL_DU_DEPOT>
+```bash
+git clone [URL_DE_MON_REPO]
 cd pulmoscan-ai
 ```
 
 ### 2. Créer l'environnement et installer les dépendances
 
-``` bash
+```bash
 python3.11 -m venv .venv
 
 # macOS / Linux
@@ -245,15 +222,15 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Sur un Mac Apple Silicon, décommentez la ligne `tensorflow-metal` dans `requirements.txt` pour activer l'accélération GPU Metal.
+
 ### 3. Télécharger le jeu de données
 
-Depuis Kaggle, créez un jeton API dans **Settings → API → Create New
-Token**. Placez ensuite le fichier `kaggle.json` dans le dossier
-`.kaggle` de votre répertoire utilisateur.
+Depuis Kaggle, créez un jeton API dans **Settings → API → Create New Token**. Placez ensuite le fichier `kaggle.json` dans le dossier `.kaggle` de votre répertoire utilisateur.
 
 **macOS / Linux :**
 
-``` bash
+```bash
 mkdir -p ~/.kaggle
 mv ~/Downloads/kaggle.json ~/.kaggle/
 chmod 600 ~/.kaggle/kaggle.json
@@ -266,7 +243,7 @@ kaggle datasets download \
 
 **Windows PowerShell :**
 
-``` powershell
+```powershell
 New-Item -ItemType Directory -Force "$HOME\.kaggle"
 Move-Item "$HOME\Downloads\kaggle.json" "$HOME\.kaggle\kaggle.json"
 
@@ -276,10 +253,9 @@ kaggle datasets download `
   --unzip
 ```
 
-Copiez les dossiers des **coupes originales** dans le répertoire du
-projet :
+Copiez les dossiers des **coupes originales** dans le répertoire du projet :
 
-``` text
+```text
 pulmoscan-ai/
 └── CT Scans/
     ├── nCT/
@@ -287,37 +263,66 @@ pulmoscan-ai/
     └── pCT/
 ```
 
-Pour utiliser un autre emplacement, définissez la variable
-d'environnement `PULMOSCAN_DATA_ROOT`.
+Pour utiliser un autre emplacement, définissez la variable d'environnement `PULMOSCAN_DATA_ROOT`.
 
-### 4. Lancer le notebook
+## Utilisation
 
-Ouvrez `classifier.ipynb` dans Jupyter ou VS Code, puis exécutez les
-cellules dans l'ordre.
+### Lancer le notebook
 
-Pour vérifier rapidement l'installation avant un entraînement complet,
-activez `SMOKE_TEST = True` dans la cellule des paramètres. Ce mode
-utilise un sous-ensemble réduit des données et une seule époque.
+Ouvrez `classifier.ipynb` dans Jupyter ou VS Code, puis exécutez les cellules dans l'ordre.
 
-### 5. Lancer la démo Streamlit (optionnel)
+Pour vérifier rapidement l'installation, gardez `SMOKE_TEST = True` dans la cellule des paramètres. Ce mode utilise un sous-ensemble réduit des données et une seule époque.
+
+Pour lancer l'entraînement complet de 25 époques :
+
+1. ouvrez la cellule **Paramètres** ;
+2. remplacez `SMOKE_TEST = True` par `SMOKE_TEST = False` ;
+3. exécutez toutes les cellules dans l'ordre.
+
+Le notebook enregistre le modèle dans `outputs/checkpoints/pulmoscan_mobilenetv3.keras` et l'ordre des classes dans `outputs/checkpoints/class_names.json`.
+
+### Utiliser le modèle entraîné
+
+```python
+import json
+
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+
+model = tf.keras.models.load_model("outputs/checkpoints/pulmoscan_mobilenetv3.keras")
+class_names = json.load(open("outputs/checkpoints/class_names.json", encoding="utf-8"))
+
+image = Image.open("chemin/vers/coupe.jpg").convert("RGB").resize((256, 256), Image.BILINEAR)
+left = (256 - 224) // 2
+image = image.crop((left, left, left + 224, left + 224))
+
+# Pixels bruts 0-255 : ne pas diviser par 255, MobileNetV3 normalise en interne.
+x = np.expand_dims(np.asarray(image, dtype=np.float32), axis=0)
+probs = model.predict(x, verbose=0)[0]
+
+for name, p in sorted(zip(class_names, probs), key=lambda t: t[1], reverse=True):
+    print(f"{name}: {p:.1%}")
+```
+
+### Lancer la démo Streamlit (optionnel)
 
 Installez les dépendances dédiées :
 
-``` bash
+```bash
 pip install -r requirements-demo.txt
 streamlit run app.py
 ```
 
-Ouvrez ensuite l'adresse locale affichée dans le terminal (généralement
-`http://localhost:8501`).
+Ouvrez ensuite l'adresse locale affichée dans le terminal (généralement `http://localhost:8501`).
 
-La démo permet de soumettre une image et d'afficher les probabilités
-prédites pour les trois classes. Elle charge le checkpoint fourni dans
-le dépôt.
+La démo charge `pulmoscan_mobilenetv3.keras` et `class_names.json`, puis affiche les probabilités prédites pour les trois classes. Si le modèle est absent, l'application affiche un message d'erreur explicite.
 
 ### Docker (optionnel)
 
-``` bash
+Le modèle doit d'abord être entraîné et placé dans `outputs/checkpoints/`.
+
+```bash
 docker build -t pulmoscan-ai .
 docker run --rm -p 8501:8501 pulmoscan-ai
 ```
@@ -326,7 +331,7 @@ Puis ouvrez `http://localhost:8501` dans votre navigateur.
 
 ## Structure du dépôt
 
-``` text
+```text
 pulmoscan-ai/
 ├── app.py
 ├── assets/
@@ -340,7 +345,7 @@ pulmoscan-ai/
 ├── classifier.html
 ├── outputs/
 │   └── checkpoints/
-│       └── mobilenet_v3_large.pth
+│       └── class_names.json
 ├── reports/
 │   └── training_history_original_run.json
 ├── scripts/
@@ -351,118 +356,96 @@ pulmoscan-ai/
 └── README.md
 ```
 
-## Limites et pistes d'amélioration
+Après un entraînement complet, les fichiers suivants s'ajoutent :
 
-Les performances rapportées sont élevées, mais elles ne suffisent pas à
-démontrer que le modèle serait fiable dans un contexte médical réel.
+```text
+outputs/
+├── checkpoints/
+│   └── pulmoscan_mobilenetv3.keras
+└── metrics.json
 
-1.  **Découpage par coupe et non par patient** --- des coupes d'un même
-    patient peuvent apparaître dans les ensembles d'entraînement et de
-    test. Les performances de test peuvent donc être surestimées.
-2.  **Source de données limitée** --- les images proviennent de deux
-    hôpitaux de Wuhan. La capacité du modèle à généraliser à d'autres
-    hôpitaux, populations et appareils n'est pas établie.
-3.  **Absence de contexte 3D** --- le modèle analyse chaque coupe
-    indépendamment, sans exploiter le volume complet ni les informations
-    cliniques du patient.
-4.  **Déséquilibre des classes** --- l'accuracy seule peut masquer de
-    mauvaises performances sur certaines catégories. La précision, le
-    rappel, le F1 et la matrice de confusion sont donc nécessaires.
-5.  **Risque d'apprentissage de raccourcis** --- le modèle pourrait
-    exploiter des artefacts visuels ou des indices d'acquisition plutôt
-    que les structures anatomiques pertinentes. Une analyse de
-    saillance, par exemple avec Grad-CAM, serait utile.
-6.  **Calibration et validation externe absentes** --- les probabilités
-    prédites ne sont pas nécessairement bien calibrées et aucune
-    validation sur un jeu de données externe n'est documentée.
-7.  **Validation des résultats** --- les performances doivent être
-    confirmées par des exécutions reproductibles et, idéalement, par une
-    validation externe.
+assets/
+├── courbes_validation.png
+├── matrice_confusion.png
+└── predictions.png
+```
+
+## Analyse critique
+
+Les performances du projet d'origine sont élevées, mais elles ne suffisent pas à démontrer que le modèle serait fiable dans un contexte médical réel.
+
+1. **Découpage par coupe et non par patient** — des coupes d'un même patient peuvent apparaître dans les ensembles d'entraînement et de test. Les performances de test peuvent donc être surestimées.
+2. **Source de données limitée** — les images proviennent de deux hôpitaux de Wuhan. La capacité du modèle à généraliser à d'autres hôpitaux, populations et appareils n'est pas établie.
+3. **Absence de contexte 3D** — le modèle analyse chaque coupe indépendamment, sans exploiter le volume complet ni les informations cliniques du patient.
+4. **Déséquilibre des classes** — la classe `nCT` représente environ la moitié des images. Une exactitude globale élevée peut masquer de mauvaises performances sur `pCT` ou `NiCT` ; la précision, le rappel, le F1 et la matrice de confusion sont donc nécessaires.
+5. **Risque d'apprentissage de raccourcis** — le modèle pourrait exploiter des artefacts visuels ou des indices d'acquisition plutôt que les structures anatomiques pertinentes. Une analyse de saillance, par exemple avec Grad-CAM, serait utile.
+6. **Calibration et validation externe absentes** — les probabilités prédites ne sont pas nécessairement bien calibrées et aucune validation sur un jeu de données externe n'est documentée.
+7. **Résultats TensorFlow non produits** — le code d'évaluation est prêt, mais aucun entraînement complet n'a été exécuté lors de la migration. Les résultats restent à produire et à vérifier.
+8. **Pas d'interprétabilité** — le notebook ne montre pas encore de Grad-CAM ni de carte de saillance.
 
 ### Améliorations possibles
 
--   Effectuer un découpage strict par patient.
--   Évaluer le modèle sur un jeu de données externe.
--   Examiner les prédictions avec Grad-CAM.
--   Mesurer la calibration et fournir des intervalles de confiance.
--   Publier les métriques détaillées par classe après exécution de
-    l'évaluation.
+- Effectuer un découpage strict par patient.
+- Évaluer le modèle sur un jeu de données externe.
+- Examiner les prédictions avec Grad-CAM.
+- Mesurer la calibration et fournir des intervalles de confiance.
+- Publier les métriques détaillées par classe après un entraînement complet.
 
 ## Ma contribution
 
-Ce projet vise à rendre le projet plus accessible, documenté et
-exploitable en français. Les changements apportés comprennent :
+Ce projet vise à rendre le projet plus accessible, documenté et exploitable en français. Les changements réellement apportés comprennent :
 
--   Rebranding sous le nom **PulmoScan AI** et création des visuels
-    français.
--   Traduction et réorganisation de la documentation et des cellules
-    explicatives du notebook.
--   Restructuration du README et ajout d'une analyse critique des
-    limites.
--   Création de figures françaises à partir des données et logs du
-    projet.
--   Ajout dans le notebook d'une évaluation par classe et de l'export
-    des métriques.
--   Amélioration du mode *smoke test* et ajout de `PULMOSCAN_DATA_ROOT`.
--   Ajout d'une démo Streamlit et des fichiers nécessaires à son
-    exécution avec Docker.
--   Clarification des crédits, de l'attribution et de la provenance des
-    résultats.
+- **Migration PyTorch vers TensorFlow/Keras** : notebook, pipeline `tf.data`, modèle MobileNetV3-Large, entraînement, sauvegarde et rechargement.
+- **Nouvelle évaluation** : ajout de la matrice de confusion et du rapport précision/rappel/F1 par classe avec scikit-learn. Le code est prêt ; les résultats restent à produire après un entraînement complet.
+- **Application Streamlit** : chargement du modèle `.keras` et de `class_names.json`, prétraitement 224 × 224 en pixels bruts, prédiction softmax.
+- **Documentation française** : README, notebook, commentaires, messages et libellés de figures.
+- **Rebranding** sous le nom **PulmoScan AI** et création des visuels français.
+- **Mode smoke test** et variable `PULMOSCAN_DATA_ROOT` pour vérifier le pipeline sans le vrai jeu de données.
+- **Docker** : mise à jour du conteneur pour TensorFlow/Keras.
+- **Clarification des crédits, de l'attribution et de la provenance des résultats.**
 
+Aucun entraînement complet sur le vrai jeu de données n'a été réalisé. Aucune métrique TensorFlow n'est présentée comme mesurée.
 
-## Crédits et références
+## Crédits et attribution
 
-Le développement de PulmoScan AI est indépendant. Les références ci-dessous créditent les ressources, données et technologies utilisées ; elles ne représentent pas une attribution du projet à un dépôt tiers.
+Ce projet est dérivé du projet open source d'origine :
 
+- **Projet d'origine :** `covid-ct-classifier`, auteur **chrispathway**, [URL_DU_REPO_ORIGINAL].
+- Le fichier [`LICENSE`](LICENSE) de ce dépôt est conservé.
 
 ### Jeu de données
 
--   Abu Zahid Bin Aziz, [CT Scans for COVID-19
-    Classification](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19),
-    Kaggle, licence CC BY 4.0.
--   Ning, W. et al., *iCTCF: an integrative resource of chest computed
-    tomography images and clinical features of patients with COVID-19
-    pneumonia* (2020).
+- **Abu Zahid Bin Aziz**, [CT Scans for COVID-19 Classification](https://www.kaggle.com/datasets/azaemon/preprocessed-ct-scans-for-covid19), Kaggle, licence **CC BY 4.0**.
+- **Ning, W. et al.**, *iCTCF: an integrative resource of chest computed tomography images and clinical features of patients with COVID-19 pneumonia* (2020).
 
 ### Architecture et outils
 
--   Howard, A. et al., [Searching for
-    MobileNetV3](https://arxiv.org/abs/1905.02244), ICCV 2019.
--   [PyTorch](https://pytorch.org/) et
-    [torchvision](https://pytorch.org/vision/stable/models/mobilenetv3.html).
--   NumPy, Matplotlib, Pillow, Jupyter et Streamlit.
+- **Howard, A. et al.**, [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244), ICCV 2019.
+- [TensorFlow](https://www.tensorflow.org/) et [Keras](https://keras.io/).
+- NumPy, pandas, scikit-learn, Matplotlib, Seaborn, Pillow, Jupyter et Streamlit.
 
-Consultez le fichier [`LICENSE`](LICENSE) pour les conditions de licence
-applicables à ce projet. Les ressources et bibliothèques tierces utilisées sont référencées ci-dessus.
+Les ressources et bibliothèques tierces utilisées sont référencées ci-dessus.
 
-## Auteur
+## À propos de l'auteur
 
-**Mohammed Oughlane**\
+**Mohammed Oughlane**  
 Marrakech, Maroc
 
--   GitHub : `<LIEN_GITHUB>`
--   LinkedIn : `<LIEN_LINKEDIN>`
+- GitHub : [LIEN_GITHUB]
+- LinkedIn : [LIEN_LINKEDIN]
 
-------------------------------------------------------------------------
+**Période de réalisation :** 30/10/2026 – 03/11/2026
+
+---
 
 ## Avertissement
 
-**PulmoScan AI est un projet pédagogique et ne constitue pas un
-dispositif médical.** Il ne doit pas être utilisé pour établir un
-diagnostic, trier des patients ou prendre une décision de santé. Les
-résultats présentés ne constituent pas une validation clinique et ne
-remplacent pas l'avis d'un professionnel de santé.
+**PulmoScan AI est un projet pédagogique et ne constitue pas un dispositif médical.** Il ne doit pas être utilisé pour établir un diagnostic, trier des patients ou prendre une décision de santé. Les résultats présentés ne constituent pas une validation clinique et ne remplacent pas l'avis d'un professionnel de santé.
 
-Les données utilisées sont publiques et anonymisées. Aucune donnée
-patient identifiable n'est incluse dans ce dépôt.
+Les données utilisées sont publiques et anonymisées. Aucune donnée patient identifiable n'est incluse dans ce dépôt.
 
-------------------------------------------------------------------------
+---
 
-```{=html}
 <p align="center">
-```
-`<sub>`{=html}Projet pédagogique de deep learning · Computer Vision ·
-PyTorch`</sub>`{=html}
-```{=html}
+  <sub>Projet pédagogique de deep learning · Computer Vision · TensorFlow/Keras</sub>
 </p>
-```

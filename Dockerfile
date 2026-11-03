@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Bibliothèques système minimales pour PyTorch CPU
+# Bibliothèques système minimales pour TensorFlow CPU
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libgomp1 \
     && rm -rf /var/lib/apt/lists/*
@@ -15,7 +15,9 @@ COPY requirements-demo.txt ./
 RUN pip install --upgrade pip && pip install -r requirements-demo.txt
 
 COPY app.py ./
-COPY outputs/checkpoints/mobilenet_v3_large.pth outputs/checkpoints/mobilenet_v3_large.pth
+# Le dossier contient class_names.json et, après un entraînement complet,
+# le modèle pulmoscan_mobilenetv3.keras.
+COPY outputs/checkpoints/ ./outputs/checkpoints/
 COPY assets ./assets
 
 EXPOSE 8501

@@ -3,8 +3,9 @@
 Lancement :
     streamlit run app.py
 
-La démo charge le checkpoint inclus dans le dépôt et classe une coupe de
-scanner thoracique en trois catégories : normal, COVID-19 ou non informatif.
+La démo charge le modèle TensorFlow/Keras inclus dans le dépôt et classe
+une coupe de scanner thoracique en trois catégories : normal, COVID-19 ou
+non informatif.
 """
 
 from __future__ import annotations
@@ -12,19 +13,20 @@ from __future__ import annotations
 import base64
 import html
 import io
+import json
 from pathlib import Path
 
+import numpy as np
 import streamlit as st
-import torch
+import tensorflow as tf
 from PIL import Image
-from torch import nn
-from torchvision import models, transforms
 
 APP_NAME = "PulmoScan AI"  # un seul endroit à modifier si le projet est renommé
 
 st.set_page_config(page_title=APP_NAME, page_icon="🫁", layout="wide", initial_sidebar_state="collapsed")
 
-CHECKPOINT_PATH = Path("outputs/checkpoints/mobilenet_v3_large.pth")
+CHECKPOINT_PATH = Path("outputs/checkpoints/pulmoscan_mobilenetv3.keras")
+CLASS_NAMES_PATH = Path("outputs/checkpoints/class_names.json")
 IMG_SHAPE = 224
 CLASS_NAMES = {
     "nCT": "Scanner normal",
@@ -118,68 +120,42 @@ h1, h2, h3, p { font-family: "Newsreader", Georgia, serif; }
 # ---------------------------------------------------------------------------
 # Modèle
 # ---------------------------------------------------------------------------
-class Classifier(nn.Module):
-    """Tête de classification utilisée dans le notebook."""
-
-    def __init__(self, input_size=960, output_size=3, hidden_layers=(1280,), drop_p=0.2):
-        super().__init__()
-        layers = []
-        prev = input_size
-        for hidden in hidden_layers:
-            layers.extend([nn.Linear(prev, hidden), nn.ReLU(inplace=True), nn.Dropout(p=drop_p)])
-            prev = hidden
-        layers.append(nn.Linear(prev, output_size))
-        self.net = nn.Sequential(*layers)
-
-    def forward(self, x):
-        return torch.log_softmax(self.net(x), dim=1)
-
-
 @st.cache_resource(show_spinner=False)
-def load_model(path: str, device_name: str):
-    """Charge le checkpoint et reconstruit le modèle."""
-    device = torch.device(device_name)
-    ckpt = torch.load(path, map_location=device, weights_only=False)
-
-    model = models.mobilenet_v3_large(weights=None)
-    model.classifier = Classifier(
-        input_size=ckpt["input_size"],
-        output_size=ckpt["output_size"],
-        hidden_layers=ckpt["hidden_layers"],
-        drop_p=ckpt["drop_p"],
-    )
-    model.load_state_dict(ckpt["state_dict"])
-    model.to(device).eval()
-
-    idx_to_class = {idx: name for name, idx in ckpt["class_to_idx"].items()}
-    return model, idx_to_class, device
+def load_model(path: str, class_names_path: str):
+    """Charge le modèle Keras et l'ordre explicite des classes."""
+    model = tf.keras.models.load_model(path, compile=False)
+    with open(class_names_path, encoding="utf-8") as f:
+        class_names = json.load(f)
+    return model, class_names
 
 
 def choose_device() -> str:
-    if torch.cuda.is_available():
-        return "cuda"
-    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
-        return "mps"
-    return "cpu"
+    gpus = tf.config.list_physical_devices("GPU")
+    return "GPU" if gpus else "CPU"
 
 
-def preprocess(image: Image.Image) -> torch.Tensor:
-    transform = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(IMG_SHAPE),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    ])
-    return transform(image.convert("RGB")).unsqueeze(0)
+def preprocess(image: Image.Image) -> np.ndarray:
+    """Redimensionne, recadre au centre et renvoie des pixels bruts 0-255.
+
+    Le MobileNetV3 de Keras contient sa propre couche de normalisation :
+    il attend des valeurs entre 0 et 255. On ne divise donc pas par 255 et
+    on n'applique pas les statistiques d'ImageNet.
+    """
+    image = image.convert("RGB").resize((256, 256), Image.BILINEAR)
+    left = (256 - IMG_SHAPE) // 2
+    image = image.crop((left, left, left + IMG_SHAPE, left + IMG_SHAPE))
+    return np.expand_dims(np.asarray(image, dtype=np.float32), axis=0)
 
 
-def predict(image: Image.Image, model, idx_to_class, device):
-    tensor = preprocess(image).to(device)
-    with torch.no_grad():
-        probs = torch.softmax(model(tensor), dim=1)[0].cpu()
+def predict(image: Image.Image, model, class_names):
+    probs = model.predict(preprocess(image), verbose=0)[0]
     rows = [
-        {"key": idx_to_class[i], "Classe": CLASS_NAMES[idx_to_class[i]], "Probabilité": float(probs[i])}
-        for i in range(len(probs))
+        {
+            "key": class_names[i],
+            "Classe": CLASS_NAMES.get(class_names[i], class_names[i]),
+            "Probabilité": float(probs[i]),
+        }
+        for i in range(len(class_names))
     ]
     return sorted(rows, key=lambda row: row["Probabilité"], reverse=True)
 
@@ -269,11 +245,13 @@ def render_notes() -> None:
         <div class="notes">
             <div>
                 <h3>Comment le modèle lit l'image</h3>
-                <p>L'image est redimensionnée, recadrée au centre en 224 × 224 pixels, puis normalisée
-                avec les statistiques d'ImageNet. MobileNetV3-Large en extrait 960 caractéristiques, et une
-                petite tête de classification (1 280 neurones, dropout 20 %) en déduit trois probabilités.</p>
-                <p>Dans le projet d'origine, dont ce travail est dérivé, le modèle atteint 99,76 % de précision
-                sur 2 956 coupes de test. Ce chiffre n'a pas été reproduit ici.</p>
+                <p>L'image est redimensionnée, recadrée au centre en 224 × 224 pixels, puis transmise
+                avec ses pixels bruts (0-255) : MobileNetV3 applique sa propre normalisation interne.
+                Le réseau en extrait 960 caractéristiques, et une petite tête de classification
+                (1 280 neurones, dropout 20 %) en déduit trois probabilités.</p>
+                <p>Dans le projet d'origine, dont ce travail est dérivé, le modèle atteint 99,76 %
+                de précision sur 2 956 coupes de test. Ce chiffre n'a pas été reproduit dans cette
+                version TensorFlow/Keras.</p>
             </div>
             <div>
                 <h3>Ce que ce modèle ne sait pas faire</h3>
@@ -309,13 +287,20 @@ def main() -> None:
     if not CHECKPOINT_PATH.exists():
         st.error(
             f"Modèle introuvable : `{CHECKPOINT_PATH}`. "
-            "Placez le fichier `mobilenet_v3_large.pth` à cet emplacement, puis relancez l'application."
+            "Placez le fichier `pulmoscan_mobilenetv3.keras` à cet emplacement, puis relancez l'application."
+        )
+        st.stop()
+
+    if not CLASS_NAMES_PATH.exists():
+        st.error(
+            f"Ordre des classes introuvable : `{CLASS_NAMES_PATH}`. "
+            "Placez le fichier `class_names.json` à cet emplacement, puis relancez l'application."
         )
         st.stop()
 
     device_name = choose_device()
     with st.spinner("Chargement du modèle"):
-        model, idx_to_class, device = load_model(str(CHECKPOINT_PATH), device_name)
+        model, class_names = load_model(str(CHECKPOINT_PATH), str(CLASS_NAMES_PATH))
 
     left, right = st.columns([1.15, 1.0], gap="large")
     with left:
@@ -325,7 +310,7 @@ def main() -> None:
             label_visibility="collapsed",
         )
         image = Image.open(uploaded) if uploaded is not None else None
-        rows = predict(image, model, idx_to_class, device) if image is not None else None
+        rows = predict(image, model, class_names) if image is not None else None
         render_viewport(
             image,
             uploaded.name if uploaded is not None else "",

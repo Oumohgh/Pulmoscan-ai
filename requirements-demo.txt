@@ -1,9 +1,11 @@
 # Dépendances de la démo Streamlit (en plus du notebook)
 # Installation : pip install -r requirements-demo.txt
+tensorflow==2.21.0
 
-torch==2.14.1
-torchvision==0.29.1
-numpy==2.4.6
-pillow==12.3.0
-streamlit==1.64.0
-pandas==2.3.3
+# Apple Silicon (macOS) uniquement : décommentez la ligne suivante pour
+# activer l'accélération GPU Metal.
+# tensorflow-metal==1.2.0
+
+numpy>=1.26,<2.3
+pillow>=10.0
+streamlit>=1.40
